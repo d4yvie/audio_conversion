@@ -12,14 +12,17 @@ finished_marker = '.opus'
 
 
 def convert_file(file: tuple[str, str]):
-    root, name = file
-    f = os.path.join(root, name)
-    filename, file_extension = os.path.splitext(f)
-    if (file_extension in file_endings) and not (finished_marker in f):
-        print(f"converting {f}")
-        subprocess.check_output(['opusenc', f, '--bitrate', '192', filename + '.opus' ])
-        os.remove(f)
-        return f
+    try:
+        root, name = file
+        f = os.path.join(root, name)
+        filename, file_extension = os.path.splitext(f)
+        if (file_extension in file_endings) and not (finished_marker in f):
+            print(f"converting {f}")
+            subprocess.check_output(['opusenc', f, '--bitrate', '192', filename + '.opus' ])
+            os.remove(f)
+            return f
+    except Exception as e:
+        print(f"failed to convert file: {e}")
     return None
 
 
@@ -30,7 +33,7 @@ if __name__ == '__main__':
     start = time.time()
     files = [f for f in os.listdir('.') if os.path.isfile(f)]
     args = sys.argv
-    if len(args) > 2:
+    if len(args) > 1:
         os.chdir(args[1])
     print(f"Using directory: {os.getcwd()} recursively")
     files = [(root, f) for root, dirs, files in os.walk(".", topdown=True) for f in files]
