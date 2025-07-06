@@ -24,6 +24,9 @@ def convert_file(file: tuple[str, str]):
 
 
 if __name__ == '__main__':
+    """
+    Converts the flac files of passed directory to opus.
+    """
     start = time.time()
     files = [f for f in os.listdir('.') if os.path.isfile(f)]
     args = sys.argv
