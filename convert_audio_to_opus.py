@@ -4,6 +4,7 @@ import time
 from multiprocessing import Pool
 from operator import is_not
 from functools import partial
+from contextlib import chdir
 import sys
 
 
@@ -30,11 +31,10 @@ if __name__ == '__main__':
     start = time.time()
     files = [f for f in os.listdir('.') if os.path.isfile(f)]
     args = sys.argv
-    directory = "."
     if len(args) > 2:
-        directory = args[1]
-    print(f"Using directory: {directory} recursively")
-    files = [(root, f) for root, dirs, files in os.walk(directory, topdown=True) for f in files]
+        os.chdir(args[1])
+    print(f"Using directory: {os.getcwd()} recursively")
+    files = [(root, f) for root, dirs, files in os.walk(".", topdown=True) for f in files]
     with Pool() as pool:
         result = list(pool.map(convert_file, files))
         converted_files = list(filter(partial(is_not, None), result))
