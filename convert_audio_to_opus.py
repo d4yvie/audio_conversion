@@ -1,11 +1,10 @@
 import subprocess
 import os
 import time
+import sys
 from multiprocessing import Pool
 from operator import is_not
 from functools import partial
-from contextlib import chdir
-import sys
 
 
 file_endings = ['.flac']
