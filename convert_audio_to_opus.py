@@ -20,6 +20,7 @@ def convert_file(file: tuple[str, str]):
         subprocess.check_output(['opusenc', f, '--bitrate', '192', filename + '.opus' ])
         os.remove(f)
         return f
+    return None
 
 
 if __name__ == '__main__':
