@@ -1,10 +1,10 @@
 import subprocess
 import os
-import multiprocessing
 import time
 from multiprocessing import Pool
 from operator import is_not
 from functools import partial
+import sys
 
 
 file_endings = ['.flac']
@@ -25,7 +25,11 @@ def convert_file(file: tuple[str, str]):
 if __name__ == '__main__':
     start = time.time()
     files = [f for f in os.listdir('.') if os.path.isfile(f)]
-    files = [(root, f) for root, dirs, files in os.walk(".", topdown=True) for f in files]
+    args = sys.argv
+    directory = "."
+    if len(args) > 2:
+        directory = args[1]
+    files = [(root, f) for root, dirs, files in os.walk(directory, topdown=True) for f in files]
     with Pool() as pool:
         result = list(pool.map(convert_file, files))
         converted_files = list(filter(partial(is_not, None), result))
