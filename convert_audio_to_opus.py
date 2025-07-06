@@ -26,6 +26,11 @@ def convert_file(file: tuple[str, str]):
     return None
 
 
+def du(path):
+    """disk usage in human readable format (e.g. '2,1GB')"""
+    return subprocess.check_output(['du','-sh', path]).split()[0].decode('utf-8')
+
+
 if __name__ == '__main__':
     """
     Converts the flac files of passed directory to opus.
@@ -36,6 +41,7 @@ if __name__ == '__main__':
     if len(args) > 1:
         os.chdir(args[1])
     print(f"Using directory: {os.getcwd()} recursively")
+    du_before = du('.');
     files = [(root, f) for root, dirs, files in os.walk(".", topdown=True) for f in files]
     with Pool() as pool:
         result = list(pool.map(convert_file, files))
@@ -44,3 +50,4 @@ if __name__ == '__main__':
         print(converted_files)
         print(f"Converted {len(converted_files)} files")
     print(f"Conversion took {time.time() - start} seconds")
+    print(f"du before: {du_before}, du after: {du('.')}")
