@@ -11,7 +11,7 @@ file_endings = ['.flac']
 finished_marker = '.opus'
 
 
-def convert_file(file: tuple[str, str]):
+def convert_file(file: tuple[str, str]) -> str | None:
     try:
         root, name = file
         f = os.path.join(root, name)
@@ -26,7 +26,7 @@ def convert_file(file: tuple[str, str]):
     return None
 
 
-def du(path):
+def du(path: str) -> str:
     """disk usage in human readable format (e.g. '2,1GB')"""
     return subprocess.check_output(['du','-sh', path]).split()[0].decode('utf-8')
 
