@@ -30,6 +30,7 @@ if __name__ == '__main__':
     directory = "."
     if len(args) > 2:
         directory = args[1]
+    print(f"Using directory: {directory} recursively")
     files = [(root, f) for root, dirs, files in os.walk(directory, topdown=True) for f in files]
     with Pool() as pool:
         result = list(pool.map(convert_file, files))
