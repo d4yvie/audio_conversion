@@ -5,16 +5,21 @@ import sys
 from multiprocessing import Pool
 from operator import is_not
 from functools import partial
+from typing import NamedTuple
+
+
+class FileId(NamedTuple):
+    path: str
+    name: str
 
 
 file_endings = ['.flac']
 finished_marker = '.opus'
 
 
-def convert_file(file: tuple[str, str]) -> str | None:
+def convert_file(file: FileId) -> str | None:
     try:
-        root, name = file
-        f = os.path.join(root, name)
+        f = os.path.join(file.path, file.name)
         filename, file_extension = os.path.splitext(f)
         if (file_extension in file_endings) and not (finished_marker in f):
             print(f"converting {f}")
@@ -42,7 +47,7 @@ if __name__ == '__main__':
         os.chdir(args[1])
     print(f"Using directory: {os.getcwd()} recursively")
     du_before = du('.');
-    files = [(root, f) for root, dirs, files in os.walk(".", topdown=True) for f in files]
+    files = [FileId(root, f) for root, dirs, files in os.walk(".", topdown=True) for f in files]
     with Pool() as pool:
         result = list(pool.map(convert_file, files))
         converted_files = list(filter(partial(is_not, None), result))
